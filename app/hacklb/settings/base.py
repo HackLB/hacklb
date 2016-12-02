@@ -20,7 +20,7 @@ WSGI_APPLICATION = 'hacklb.wsgi.application'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_DIR = os.path.dirname(BASE_DIR)
 ASSETS_DIR = os.path.join(os.path.dirname(PROJECT_DIR), 'assets/')
-
+REPOS_ROOT = os.path.join(ASSETS_DIR, 'repos')
 # --------------------------------------------------
 # Security settings
 # --------------------------------------------------
