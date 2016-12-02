@@ -44,6 +44,7 @@ INSTALLED_APPS += ADDED_APPS
 
 CUSTOM_APPS = [
     'core',
+    'crime',
     'legistar',
 ]
 INSTALLED_APPS += CUSTOM_APPS
