@@ -1,3 +1,6 @@
 *.pyc
 static_run/
 tmp/
+assets/repos/crime-statistics
+
+assets/repos/restaurant-closures
