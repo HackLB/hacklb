@@ -20,10 +20,12 @@ from django.contrib.auth import views as auth_views
 from django.views.static import serve as static_serve
 
 
+# Enable Django Admin site
 urlpatterns = [
     url(r'^admin/', admin.site.urls)
 ]
 
+# Enable MEDIA and STATIC serving
 urlpatterns += [
     url(r'^media/(?P<path>.*)$', static_serve, {
         'document_root': settings.MEDIA_ROOT,
@@ -33,12 +35,16 @@ urlpatterns += [
     }),
 ]
 
+
+# Enable URL files from custom Django apps
 urlpatterns += [
     url(r'^', include('core.urls')),
+    url(r'^crime/', include('crime.urls')),
     url(r'^legistar/', include('legistar.urls')),
 ]
 
 
+# Enable debug toolbar
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns += [
