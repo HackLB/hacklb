@@ -33,6 +33,7 @@ ADDED_APPS = [
     'django_extensions',
     'haystack',
     'rest_framework',
+    'rest_framework_gis',
     'bootstrap_pagination',
 ]
 INSTALLED_APPS += ADDED_APPS
@@ -45,6 +46,7 @@ INSTALLED_APPS += ADDED_APPS
 CUSTOM_APPS = [
     'core',
     'crime',
+    'geographic',
     'legistar',
 ]
 INSTALLED_APPS += CUSTOM_APPS

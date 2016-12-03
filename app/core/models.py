@@ -36,7 +36,7 @@ class DescriptiveBaseClass(models.Model):
     A descriptive abstract base class for primary classes provides basic descriptive fields, 
     a la Dublin Core, for concrete classes to use as a mixin.
     """
-    name = models.CharField(null=True, blank=True, db_index=True, max_length=256, )
+    title = models.CharField(null=True, blank=True, db_index=True, max_length=256, )
     description = models.TextField(null=True, blank=True, )
 
     class Meta:
@@ -54,3 +54,27 @@ class InternetResourceClass(models.Model):
     class Meta:
         abstract = True
 
+
+class PlaceBaseClass(models.Model):
+    """
+    An abstract class representing a unique Place.
+    """
+    coordinates = models.PointField(null=True, blank=True,)
+    geojson = JSONField(null=True, blank=True, )
+
+    class Meta:
+        abstract = True
+
+    @property
+    def lat(self):
+        if self.coordinates:
+            return self.coordinates[0]
+        else:
+            return None
+
+    @property
+    def lon(self):
+        if self.coordinates:
+            return self.coordinates[1]
+        else:
+            return None

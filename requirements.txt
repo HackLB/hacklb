@@ -8,6 +8,7 @@ django-bootstrap-pagination
 Celery
 django-haystack
 djangorestframework
+djangorestframework-gis
 
 psycopg2
 simplejson

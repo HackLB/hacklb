@@ -7,5 +7,6 @@ class IncidentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = crime.models.Incident
-        fields = '__all__'
+        exclude = ('json', )
+        # fields = '__all__'
 

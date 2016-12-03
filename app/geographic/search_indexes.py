@@ -1,14 +1,14 @@
 import datetime
 from haystack import indexes
-import crime.models
+import geographic.models
 
 
-class IncidentIndex(indexes.SearchIndex, indexes.Indexable):
+class DatasetIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True, )
     title = indexes.CharField(model_attr='title', null=True, )
 
     def get_model(self):
-        return crime.models.Incident
+        return geographic.models.Dataset
 
     def index_queryset(self, using=None):
         """Used when the entire index for model is updated."""
