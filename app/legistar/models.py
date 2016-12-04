@@ -35,7 +35,7 @@ class Document(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass):
             return 'unnamed document'
 
     def get_absolute_url(self):
-        return reverse('document_details', args=[str(self.pk)])
+        return reverse('legistar_document_details', args=[str(self.pk)])
 
 
 @receiver(pre_save, sender=Document)
@@ -71,7 +71,7 @@ class Meeting(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass):
             return 'meeting: {}'.format(self.guid)
 
     def get_absolute_url(self):
-        return reverse('meeting_details', args=[str(self.pk)])
+        return reverse('legistar_meeting_details', args=[str(self.pk)])
 
 
 class Body(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass):
@@ -88,7 +88,7 @@ class Body(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass):
             return self.slug
 
     def get_absolute_url(self):
-        return reverse('body_details', args=[str(self.pk)])
+        return reverse('legistar_body_details', args=[str(self.pk)])
 
 
 class AgendaItem(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass):
@@ -107,7 +107,7 @@ class AgendaItem(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass):
         return '{}: {}'.format(self.number, self.name)
 
     def get_absolute_url(self):
-        return reverse('agendaitem_details', args=[str(self.pk)])
+        return reverse('legistar_agendaitem_details', args=[str(self.pk)])
 
 
 

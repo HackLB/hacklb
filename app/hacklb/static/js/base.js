@@ -1,6 +1,6 @@
 $( document ).ready(function() {
     console.log('Welcome to HackLB');
-    setBreadcrumbMenu();
+    // setBreadcrumbMenu();
 });
 
 function setBreadcrumbMenu() {

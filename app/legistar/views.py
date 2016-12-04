@@ -14,6 +14,7 @@ from haystack.query import SearchQuerySet
 import legistar.models
 import legistar.serializers
 
+
 class HomeView(View):
     template = 'legistar/home.html'
 
@@ -67,5 +68,3 @@ class AgendaItemView(View):
     def get(self, request, guid):
         agenda_item = get_object_or_404(legistar.model.AgendaItem, pk=guid)
         return render_to_response(self.template, {'agenda_item': agenda_item})
-
-

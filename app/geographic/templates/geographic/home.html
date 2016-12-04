@@ -1,37 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}Asset: {{ this_photo }}
+{% block title %}HackLB: Geographic Datasets
 {% endblock title %}
 
 {% block css %}
-  <link href='https://fonts.googleapis.com/css?family=Rock+Salt' rel='stylesheet' type='text/css'>
-  <link href='/static/css/legistar/home.css' rel='stylesheet' type='text/css'>
+	<link href='/static/geographic/css/geographic.css' rel='stylesheet' type='text/css'>
 {% endblock css %}
 
 {% block content %}
 
-<h2>Welcome to HackLB: Legistar</h2>
-
-{% for body in bodies %}
-
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title"><a href="{{ body.get_absolute_url }}">{{ body }}</a></h3>
-  </div>
-  <div class="panel-body">
-    {% for meeting in body.meetings.all %}
-	<h4><a href="{{ meeting.get_absolute_url }}">Meeting on {{ meeting.time }}</a></h4>
-
-		{% for document in meeting.documents.all %}
-		<li><a href="{{ document.get_absolute_url }}">{{ document }}</a></li>
-		{% endfor %}
-
-	{% endfor %}
-  </div>
-</div>
-
-
-{% endfor %}
+<h2>Welcome to HackLB: Geographic Datasets</h2>
 
 <table class="table table-striped table-hover table-condensed">
 	<thead>
@@ -44,12 +22,12 @@
 	</thead>
 
 	<tbody>
-	{% for this_document in documents %}
+	{% for dataset in datasets %}
 		<tr>
-			<td><a href="{{ this_document.meeting.body.get_absolute_url }}">{{ this_document.meeting.body }}</a></td>
-			<td>{{ this_document.meeting.time }}</td>
-			<td><a href="{{ this_document.get_absolute_url }}">{{ this_document }}</a></td>
-			<td>{% if this_document.original %}{{ this_document.original.size | filesizeformat }}{% endif %}</td>
+			<td><a href="{{ dataset.get_absolute_url }}">{{ dataset.title }}</a></td>
+			<td>{{ dataset.title }}</td>
+			<td><a href="{{ dataset.get_absolute_url }}">{{ dataset.file.name }}</a></td>
+			<td>{% if dataset.file %}{{ dataset.file.size | filesizeformat }}{% endif %}</td>
 		</tr>
 	{% endfor %}
 	</tbody>
@@ -58,5 +36,5 @@
 {% endblock content %}
 
 {% block js %}
-<script src="/static/js/home.js"></script>
+<script src="/static/geographic/js/geographic.js"></script>
 {% endblock js %}

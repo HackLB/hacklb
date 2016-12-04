@@ -26,10 +26,10 @@ from rest_framework import routers
 
 urlpatterns = [
     url(r'^$', legistar.views.HomeView.as_view(), name='legistar_home'),
-    url(r'^body/(?P<guid>.*)$', legistar.views.BodyView.as_view(), name='body_details'),
-    url(r'^document/(?P<guid>.*)$', legistar.views.DocumentView.as_view(), name='document_details'),
-    url(r'^meeting/(?P<guid>.*)$', legistar.views.MeetingView.as_view(), name='meeting_details'),
-    url(r'^agendaitem/(?P<guid>.*)$', legistar.views.AgendaItemView.as_view(), name='agendaitem_details'),
+    url(r'^body/(?P<guid>.*)$', legistar.views.BodyView.as_view(), name='legistar_body_details'),
+    url(r'^document/(?P<guid>.*)$', legistar.views.DocumentView.as_view(), name='legistar_document_details'),
+    url(r'^meeting/(?P<guid>.*)$', legistar.views.MeetingView.as_view(), name='legistar_meeting_details'),
+    url(r'^agendaitem/(?P<guid>.*)$', legistar.views.AgendaItemView.as_view(), name='legistar_agendaitem_details'),
 ]
 
 router = routers.DefaultRouter()

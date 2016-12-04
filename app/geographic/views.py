@@ -24,6 +24,7 @@ class HomeView(View):
         datasets = geographic.models.Dataset.objects.all()
         return render_to_response(self.template, {'datasets': datasets})
 
+
 class DatasetView(View):
     template = 'geographic/dataset.html'
 
@@ -31,6 +32,6 @@ class DatasetView(View):
         return 'DatasetView'
 
     def get(self, request, guid):
-        dataset = get_object_or_404(geographic.model.Dataset, pk=guid)
+        dataset = get_object_or_404(geographic.models.Dataset, pk=guid)
         return render_to_response(self.template, {'dataset': dataset})
 

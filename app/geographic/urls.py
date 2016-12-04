@@ -26,7 +26,7 @@ from rest_framework import routers
 
 urlpatterns = [
     url(r'^$', geographic.views.HomeView.as_view(), name='gis_home'),
-    url(r'^dataset/(?P<guid>.*)$', geographic.views.DatasetView.as_view(), name='gis_dataset_details'),
+    url(r'^dataset/(?P<guid>.*)$', geographic.views.DatasetView.as_view(), name='geographic_dataset_details'),
 ]
 
 router = routers.DefaultRouter()

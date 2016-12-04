@@ -22,25 +22,24 @@ class Dataset(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass, Pla
     """
 
     file = models.FileField(upload_to='geographic', null=True, blank=True, max_length=1024, )
+    filename = models.TextField(null=True, blank=True, db_index=True, )
 
     def __str__(self):
-        return 'Geographic dataset {}'.format(self.pk)
+        return '{} map'.format(self.file.name)
 
     def get_absolute_url(self):
         return reverse('geographic_dataset_details', args=[str(self.pk)])
         
 
 
-# @receiver(pre_save, sender=Incident)
-# def incident_location(sender, instance, *args, **kwargs):
+# @receiver(pre_save, sender=Dataset)
+# def dataset_filename(sender, instance, *args, **kwargs):
 #     """
 #     Creates a Metadata instance whenever an Asset is added, and
 #     then extracts the metadata and populates the Metadata instance
 #     """
-#     if instance.json and ('latitude' in instance.json) and ('longitude' in instance.json) and (not instance.coordinates):
-#         print('saving coordinates...')
-#         lat = instance.json['latitude']
-#         lon = instance.json['longitude']
+#     if instance.file:
+#         print('saving filename...')
 #         instance.coordinates = 'POINT({} {})'.format(lon, lat)
 
 
