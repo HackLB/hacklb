@@ -48,5 +48,6 @@ CUSTOM_APPS = [
     'crime',
     'geographic',
     'legistar',
+    'parcels',
 ]
 INSTALLED_APPS += CUSTOM_APPS
