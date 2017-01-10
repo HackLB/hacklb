@@ -18,3 +18,4 @@ elasticsearch
 pdfminer.six
 PyPDF2
 Werkzeug
+arrow
