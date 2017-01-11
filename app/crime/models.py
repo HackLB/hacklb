@@ -57,10 +57,8 @@ def incident_location(sender, instance, *args, **kwargs):
     then extracts the metadata and populates the Metadata instance
     """
     if instance.json and ('latitude' in instance.json) and ('longitude' in instance.json) and (not instance.coordinates):
+        instance.coordinates = Point(instance.json['longitude'], instance.json['latitude'])
         print('saving coordinates...')
-        lat = instance.json['latitude']
-        lon = instance.json['longitude']
-        instance.coordinates = 'POINT({} {})'.format(lon, lat)
 
 
 @receiver(pre_save, sender=Incident)
