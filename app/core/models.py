@@ -12,6 +12,7 @@ from core.utils.pdf import PDF
 
 from haystack.utils.geo import Point
 
+
 # --------------------------------------------------
 # Abstract base classes
 # --------------------------------------------------

@@ -8,8 +8,10 @@ from django.core.urlresolvers import reverse
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import is_aware, make_aware
 from haystack.utils.geo import Point
+from django.contrib.gis.geos import Polygon
 from core.models import GenericBaseClass, DescriptiveBaseClass, InternetResourceClass, PlaceBaseClass
 import arrow
+from pprint import pprint
 
 # --------------------------------------------------
 # GIS classes
@@ -18,7 +20,6 @@ import arrow
 class Dataset(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass, PlaceBaseClass):
     """
     A GIS dataset in GeoJSON format.
-
     """
 
     file = models.FileField(upload_to='geographic', null=True, blank=True, max_length=1024, )
@@ -35,8 +36,8 @@ class Dataset(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass, Pla
 
 class Parcel(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass, PlaceBaseClass):
     """
-    A GIS dataset in GeoJSON format.
-
+    Land parcels in the city of Long Beach.
+    coordinates - the centroid of the given polygon
     """
 
     objectid = models.IntegerField(null=True, blank=True, db_index=True, )
@@ -62,23 +63,39 @@ class Parcel(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass, Plac
 
 
 @receiver(pre_save, sender=Parcel)
-def parcel_polygon(sender, instance, *args, **kwargs):
+def parcel_coordinates(sender, instance, *args, **kwargs):
     """
-    Creates a Metadata instance whenever an Asset is added, and
-    then extracts th metadata and populates the Metadata instance
+    Extracts and sets parcel.coordinates based on the centroid
+    of a given polygon, or a single set of x,y coordinates.
     """
     if instance.json:
-        this_poly = Polygon(instance.json['geometry']['coordinates'][0])
-        this_centroid = this_poly.centroid
-        # pprint(this_poly.centroid)
-        instance.coordinates = this_centroid
+        coords = instance.json['geometry']['coordinates'][0]
+
+        geo_type = instance.json['geometry']['type']
+        if geo_type == 'Polygon':
+            try:
+                this_poly = Polygon(instance.json['geometry']['coordinates'][0])
+                this_centroid = this_poly.centroid
+                instance.coordinates = this_centroid
+                print('poly: {},{}'.format(instance.coordinates.x, instance.coordinates.y))
+            except:
+                pprint(instance.json)
+        elif geo_type == 'MultiPolygon':
+            try:
+                this_poly = Polygon(instance.json['geometry']['coordinates'][0][0])
+                this_centroid = this_poly.centroid
+                instance.coordinates = this_centroid
+                print('multipoly: {},{}'.format(instance.coordinates.x, instance.coordinates.y))
+            except:
+                pprint(instance.json)
+
+
 
 
 @receiver(pre_save, sender=Parcel)
 def parcel_metadata(sender, instance, *args, **kwargs):
     """
-    Creates a Metadata instance whenever an Asset is added, and
-    then extracts th metadata and populates the Metadata instance
+    Extracts and sets various instance properties based on JSON metadata.
     """
     if instance.json:
         instance.objectid = instance.json['properties']['OBJECTID']

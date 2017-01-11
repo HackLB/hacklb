@@ -6,7 +6,7 @@ from django.core.files import File
 import os
 from pprint import pprint
 import simplejson as json
-import geographic.models
+import business.models
 from core.utils import md5
 
 class Command(BaseCommand):
@@ -21,11 +21,10 @@ class Command(BaseCommand):
         for directory, directories, files in os.walk(options['path'], topdown=False):
             for name in files:
                 path = os.path.join(directory, name)
-                if name.endswith('.geojson'):
+                if name.endswith('.json'):
                     # pprint(path)
 
-                    dataset, created = geographic.models.Dataset.objects.get_or_create(filename=name)
+                    with open(path) as f:
+                        data = json.load(f)
 
-                    if created:
-                        dataset.file.save(name, File(open(path)))
-                        dataset.save()
+                    license, created = business.models.License.objects.get_or_create(license_number=data['properties']['LICENSENO'], defaults={'json': data})

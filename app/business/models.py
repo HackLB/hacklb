@@ -12,52 +12,67 @@ from core.models import GenericBaseClass, DescriptiveBaseClass, InternetResource
 import arrow
 
 # --------------------------------------------------
-# GIS classes
+# Business License classes
 # --------------------------------------------------
 
 class License(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass, PlaceBaseClass):
     """
     A GIS dataset in GeoJSON format.
-
     """
 
-    file = models.FileField(upload_to='geographic', null=True, blank=True, max_length=1024, )
-    filename = models.TextField(null=True, blank=True, db_index=True, )
+    license_number = models.TextField(null=True, blank=True, db_index=True, unique=True, )
+    license_status = models.TextField(null=True, blank=True, db_index=True, )
+    license_datetime = models.DateTimeField(null=True, blank=True, db_index=True, )
+
+    business_category = models.TextField(null=True, blank=True, db_index=True, )
+    business_class = models.TextField(null=True, blank=True, db_index=True, )
+    dba = models.TextField(null=True, blank=True, db_index=True, )
+    employees = models.IntegerField(null=True, blank=True, db_index=True, )
+
+    location = models.TextField(null=True, blank=True, db_index=True, )
+    zip_code = models.TextField(null=True, blank=True, db_index=True, )
 
     def __str__(self):
-        return '{} map'.format(self.file.name)
+        return 'license: {}'.format(self.license_number)
 
     def get_absolute_url(self):
         return reverse('business_license_details', args=[str(self.pk)])
-        
 
 
-# @receiver(pre_save, sender=Dataset)
-# def dataset_filename(sender, instance, *args, **kwargs):
-#     """
-#     Creates a Metadata instance whenever an Asset is added, and
-#     then extracts the metadata and populates the Metadata instance
-#     """
-#     if instance.file:
-#         print('saving filename...')
-#         instance.coordinates = 'POINT({} {})'.format(lon, lat)
+
+@receiver(pre_save, sender=License)
+def license_metadata(sender, instance, *args, **kwargs):
+    """
+    Extracts and sets various instance properties based on JSON metadata.
+    """
+    if instance.json:
+        instance.dba = instance.json.get('properties', []).get('DBANAME')
+        instance.title = instance.json.get('properties', []).get('FULLNAME')
+
+        instance.business_class = instance.json.get('properties', []).get('CLASSDESC')
+        instance.business_category = instance.json.get('properties', []).get('LICCATDESC')
+        instance.employees = int(instance.json.get('properties', []).get('NUMEMP'))
+
+        instance.location = instance.json.get('properties', []).get('SITELOCATION')
+        instance.zip_code = instance.json.get('properties', []).get('ZIP')
+
+        instance.license_status = instance.json.get('properties', []).get('LICSTATUS')
+
+        dt = instance.json.get('properties', []).get('LICENSEDTTM')
+        instance.license_datetime = arrow.get(dt).datetime
+
+        print('saving #{}...'.format(instance.pk))
 
 
-# @receiver(pre_save, sender=Incident)
-# def incident_metadata(sender, instance, *args, **kwargs):
-#     """
-#     Creates a Metadata instance whenever an Asset is added, and
-#     then extracts th metadata and populates the Metadata instance
-#     """
-#     if instance.json:
-#         instance.address = instance.json.get('block_address')
-#         instance.case_number = instance.json.get('case_number')
-#         instance.city = instance.json.get('city')
-#         instance.state = instance.json.get('state')
-#         instance.description = instance.json.get('description')
-#         instance.title = instance.json.get('title')
-#         instance.incident_id = instance.json.get('incident_id')
+@receiver(pre_save, sender=License)
+def license_coordinates(sender, instance, *args, **kwargs):
+    """
+    Extracts and sets license.coordinates based on the centroid
+    of a given polygon, or a single set of x,y coordinates.
+    """
+    if instance.json:
+        coords = instance.json['geometry']['coordinates']
 
-#         datetime_str = instance.json.get('date_occured')
-#         if datetime_str:
-#             instance.date_occured = arrow.get(datetime_str).datetime
+        if len(coords) == 2:
+            instance.coordinates = Point(coords)
+            print('point: {},{}'.format(instance.coordinates.x, instance.coordinates.y))
