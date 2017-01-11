@@ -11,9 +11,10 @@ from haystack.utils.geo import Point
 from django.contrib.gis.geos import Polygon
 from core.models import GenericBaseClass, DescriptiveBaseClass, InternetResourceClass, PlaceBaseClass
 import arrow
+from pprint import pprint
 
 # --------------------------------------------------
-# GIS classes
+# Feature classes
 # --------------------------------------------------
 
 class Parcel(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass, PlaceBaseClass):
@@ -22,10 +23,7 @@ class Parcel(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass, Plac
 
     """
 
-    # file = models.FileField(upload_to='parcel', null=True, blank=True, max_length=1024, )
-    # filename = models.TextField(null=True, blank=True, db_index=True, )
     objectid = models.IntegerField(null=True, blank=True, db_index=True, )
-
     polygon = models.PolygonField(null=True, blank=True, db_index=True,)
 
     def __str__(self):
@@ -55,4 +53,17 @@ def parcel_polygon(sender, instance, *args, **kwargs):
     """
     if instance.json:
         this_poly = Polygon(instance.json['geometry']['coordinates'][0])
-        instance.polygon = this_poly
+        this_centroid = this_poly.centroid
+        # pprint(this_poly.centroid)
+        instance.coordinates = this_centroid
+
+
+@receiver(pre_save, sender=Parcel)
+def parcel_metadata(sender, instance, *args, **kwargs):
+    """
+    Creates a Metadata instance whenever an Asset is added, and
+    then extracts th metadata and populates the Metadata instance
+    """
+    if instance.json:
+        instance.objectid = instance.json['properties']['OBJECTID']
+        print('saving #{}...'.format(instance.objectid))

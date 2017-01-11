@@ -32,6 +32,24 @@ class Dataset(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass, Pla
         
 
 
+
+class Parcel(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass, PlaceBaseClass):
+    """
+    A GIS dataset in GeoJSON format.
+
+    """
+
+    objectid = models.IntegerField(null=True, blank=True, db_index=True, )
+    polygon = models.PolygonField(null=True, blank=True, db_index=True,)
+
+    def __str__(self):
+        return '{} parcel'.format(self.pk)
+
+    def get_absolute_url(self):
+        return reverse('parcel_details', args=[str(self.pk)])
+        
+
+
 # @receiver(pre_save, sender=Dataset)
 # def dataset_filename(sender, instance, *args, **kwargs):
 #     """
@@ -43,21 +61,25 @@ class Dataset(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass, Pla
 #         instance.coordinates = 'POINT({} {})'.format(lon, lat)
 
 
-# @receiver(pre_save, sender=Incident)
-# def incident_metadata(sender, instance, *args, **kwargs):
-#     """
-#     Creates a Metadata instance whenever an Asset is added, and
-#     then extracts th metadata and populates the Metadata instance
-#     """
-#     if instance.json:
-#         instance.address = instance.json.get('block_address')
-#         instance.case_number = instance.json.get('case_number')
-#         instance.city = instance.json.get('city')
-#         instance.state = instance.json.get('state')
-#         instance.description = instance.json.get('description')
-#         instance.title = instance.json.get('title')
-#         instance.incident_id = instance.json.get('incident_id')
+@receiver(pre_save, sender=Parcel)
+def parcel_polygon(sender, instance, *args, **kwargs):
+    """
+    Creates a Metadata instance whenever an Asset is added, and
+    then extracts th metadata and populates the Metadata instance
+    """
+    if instance.json:
+        this_poly = Polygon(instance.json['geometry']['coordinates'][0])
+        this_centroid = this_poly.centroid
+        # pprint(this_poly.centroid)
+        instance.coordinates = this_centroid
 
-#         datetime_str = instance.json.get('date_occured')
-#         if datetime_str:
-#             instance.date_occured = arrow.get(datetime_str).datetime
+
+@receiver(pre_save, sender=Parcel)
+def parcel_metadata(sender, instance, *args, **kwargs):
+    """
+    Creates a Metadata instance whenever an Asset is added, and
+    then extracts th metadata and populates the Metadata instance
+    """
+    if instance.json:
+        instance.objectid = instance.json['properties']['OBJECTID']
+        print('saving #{}...'.format(instance.objectid))
