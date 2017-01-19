@@ -42,6 +42,7 @@ urlpatterns += [
     url(r'^crime/', include('crime.urls')),
     url(r'^legistar/', include('legistar.urls')),
     url(r'^geographic/', include('geographic.urls')),
+    url(r'^business/', include('business.urls')),
 ]
 
 

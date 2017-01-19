@@ -14,6 +14,7 @@ from haystack.query import SearchQuerySet
 import crime.models
 import crime.serializers
 
+
 class HomeView(View):
     template = 'crime/home.html'
 
@@ -24,6 +25,7 @@ class HomeView(View):
         incidents = crime.models.Incident.objects.all()
         return render_to_response(self.template, {'incidents': incidents})
 
+
 class IncidentView(View):
     template = 'crime/incident.html'
 
@@ -33,4 +35,30 @@ class IncidentView(View):
     def get(self, request, guid):
         incident = get_object_or_404(crime.model.Incident, pk=guid)
         return render_to_response(self.template, {'incident': incident})
+
+
+
+class IncidentGeoJSON(View):
+    # template = 'crime/incident.html'
+
+    geojson_template = {"type": "FeatureCollection", "features": []}
+
+    
+
+
+    def __str__(self):
+        return 'IncidentGeoJSON'
+
+    def get(self, request, guid):
+
+        gj = geojson_template
+
+        # incident_template = {"type": "Feature", "geometry": {}, "properties": {}}
+
+        incidents = crime.models.Incident.objects.all()[0:1000]
+        for incident in incidents:
+            feature = {"type": "Feature", "geometry": {"type": "Point", "coordinates": [incident.json['longitude'], incident.json['latitude']]}, "properties": {'mag': incident.magnitude }}
+            gj['features'].append(feature)
+
+        return JsonResponse(gj)
 

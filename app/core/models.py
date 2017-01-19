@@ -60,7 +60,7 @@ class PlaceBaseClass(models.Model):
     """
     An abstract class representing a unique Place.
     """
-    coordinates = models.PointField(null=True, blank=True,)
+    coordinates = models.PointField(null=True, blank=True, db_index=True,)
     geojson = JSONField(null=True, blank=True, )
 
     class Meta:

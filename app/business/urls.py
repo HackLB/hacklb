@@ -18,19 +18,20 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
-import geographic.views
-import geographic.viewsets
+import business.views
+import business.viewsets
 
 from rest_framework import routers
 
 
 urlpatterns = [
-    url(r'^$', geographic.views.HomeView.as_view(), name='gis_home'),
-    url(r'^license/(?P<guid>.*)$', geographic.views.DatasetView.as_view(), name='business_license_details'),
+    url(r'^$', business.views.HomeView.as_view(), name='gis_home'),
+    url(r'^by_district/$', business.views.StatsByDistrictView.as_view(), name='business_stats_by_district'),
+
 ]
 
 router = routers.DefaultRouter()
-router.register(r'dataset', geographic.viewsets.DatasetViewSet)
+router.register(r'dataset', business.viewsets.DatasetViewSet)
 
 urlpatterns += [
     url(r'^api/', include(router.urls)),

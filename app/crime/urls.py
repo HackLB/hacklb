@@ -31,6 +31,7 @@ urlpatterns = [
 
 router = routers.DefaultRouter()
 router.register(r'incident', crime.viewsets.IncidentViewSet)
+router.register(r'incidentgeo', crime.viewsets.IncidentGeoViewSet)
 
 urlpatterns += [
     url(r'^api/', include(router.urls)),

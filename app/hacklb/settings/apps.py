@@ -35,6 +35,7 @@ ADDED_APPS = [
     'rest_framework',
     'rest_framework_gis',
     'bootstrap_pagination',
+    'corsheaders',
 ]
 INSTALLED_APPS += ADDED_APPS
 

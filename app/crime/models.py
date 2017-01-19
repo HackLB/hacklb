@@ -41,14 +41,42 @@ class Incident(GenericBaseClass, DescriptiveBaseClass, InternetResourceClass, Pl
     address = models.TextField(null=True, blank=True, db_index = True, )
     city = models.TextField(null=True, blank=True, db_index = True, )
     state = models.TextField(null=True, blank=True, db_index = True, )
+    magnitude = models.FloatField(null=True, blank=True, db_index = True, )
 
     def __str__(self):
-        return 'crime {}'.format(self.pk)
+        return '{}, {} on {} ({})'.format(self.title, self.address, self.date_occured, self.pk)
 
     def get_absolute_url(self):
         return reverse('crime_incident_details', args=[str(self.pk)])
         
 
+    @property
+    def magnitude_calc(self):
+        mag = 0.2
+        crime = self.title
+
+        if 'UNREASONABLE NOISE' in crime:
+            mag = 0.3
+
+        if 'PETTY THEFT' in crime or 'VANDALISM' in crime:
+            mag = 0.4
+
+        if 'ROBBERY; COMMERCIAL' in crime or 'GRAND THEFT' in crime or 'FRAUD' in crime or 'HIT AND RUN WITHOUT INJURY' in crime or 'UNAUTHORIZED USE' in crime or 'FORGERY' in crime:
+            mag = 0.6
+
+        if 'ROBBERY; PERSON' in crime or 'BURGLARY' in crime or 'HIT AND RUN WITH INJURY' in crime:
+            mag = 0.7
+
+        if 'ASSAULT' in crime or 'BATTERY' in crime or 'VIOLENCE' in crime or 'FIGHT' in crime or 'WITH FIREARM' in crime or 'INFLICT CORP INJURY' in crime or 'DEADLY WEAPON' in crime or 'DOMESTIC VIOLENCE' in crime:
+            mag = 0.8
+
+        if 'RAPE' in crime or 'KIDNAPPING' in crime:
+            mag = 0.9
+
+        if 'MURDER' in crime:
+            mag = 1.0
+
+        return mag
 
 @receiver(pre_save, sender=Incident)
 def incident_location(sender, instance, *args, **kwargs):
