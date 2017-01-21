@@ -23,11 +23,13 @@ import business.viewsets
 
 from rest_framework import routers
 
-
 urlpatterns = [
-    url(r'^$', business.views.HomeView.as_view(), name='gis_home'),
-    url(r'^by_district/$', business.views.StatsByDistrictView.as_view(), name='business_stats_by_district'),
-
+    url(r'^$', business.views.HomeView.as_view(), name='business_home'),
+    url(r'^licenses_by_district/$', business.views.LicensesByDistrictView.as_view(), name='business_licenses_by_district'),
+    url(r'^licenses_by_district/data.json', business.views.LicensesByDistrictDataView.as_view(), name='business_licenses_by_district_data'),
+    
+    url(r'^licenses_by_business_class/$', business.views.LicensesByBusinessClassView.as_view(), name='business_licenses_by_business_class'),
+    url(r'^licenses_by_business_class/data.json', business.views.LicensesByBusinessClassDataView.as_view(), name='business_licenses_by_business_class_data'),
 ]
 
 router = routers.DefaultRouter()

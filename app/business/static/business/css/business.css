@@ -1,6 +1,7 @@
-
-#dsmap {
-	width: 800px;
-	height: 400px;
-	/*background-color: #007700;*/
+#chart-container { 
+    position: absolute; 
+    top: 0; 
+    bottom: 50px; 
+    width: 100%; 
+    background-color: #000000;
 }

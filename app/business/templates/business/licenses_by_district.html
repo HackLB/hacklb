@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Business Licenses by District
+{% endblock title %}
+
+{% block css %}
+    <link href='/static/business/css/business.css' rel='stylesheet' type='text/css'>
+{% endblock css %}
+
+{% block content %}
+<canvas id="hacklbChart" class="chart-container"></canvas>
+
+{% endblock content %}
+
+{% block js %}
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+<script src="/static/business/js/chartjs-plugin-zoom.min.js"></script>
+<script src="/static/business/js/licenses_by_district.js"></script>
+{% endblock js %}
